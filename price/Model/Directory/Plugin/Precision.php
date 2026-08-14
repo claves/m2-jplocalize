@@ -13,6 +13,7 @@
 namespace Veriteworks\Price\Model\Directory\Plugin;
 
 use Magento\Directory\Model\Currency;
+use Magento\Framework\Currency\Data\Currency as CurrencyData;
 use Veriteworks\Price\Helper\Data;
 
 /**
@@ -98,7 +99,7 @@ class Precision
         if ($subject->getCode() == 'JPY') {
             $position = $this->helper->getSymbolPosition();
             $options['position'] = (int)$position;
-            if($options['position'] == \Zend_Currency::RIGHT) {
+            if($options['position'] === CurrencyData::RIGHT) {
                 $options['symbol'] = __('Yen');
             }
         }

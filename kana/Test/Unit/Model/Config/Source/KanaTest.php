@@ -1,13 +1,14 @@
 <?php
 namespace Veriteworks\Kana\Test\Unit\Model\Config\Source;
 use Veriteworks\Kana\Model\Config\Source\Kana;
+use PHPUnit\Framework\TestCase;
 
 
 /**
  * Class KanaTest
  * @package Veriteworks\Kana\Test\Unit\Model\Config\Source
  */
-class KanaTest extends \PHPUnit_Framework_TestCase
+class KanaTest extends TestCase
 {
     /**
      * @var \Veriteworks\Kana\Model\Config\Source\Kana
@@ -17,7 +18,7 @@ class KanaTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->model = new Kana();
     }

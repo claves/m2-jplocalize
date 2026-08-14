@@ -4,23 +4,26 @@ namespace Veriteworks\Kana\Test\Unit\Helper;
 use \Veriteworks\Kana\Helper\Data;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\Store\Model\ScopeInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-class DataTest extends \PHPUnit_Framework_TestCase
+class DataTest extends TestCase
 {
     /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface|MockObject
      */
     protected $scopeMock;
 
     /**
-     * @var \Veriteworks\Kana\Helper\Data|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Veriteworks\Kana\Helper\Data|MockObject
      */
     protected $helper;
 
     /**
      *
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $objectManager = new ObjectManager($this);
         $this->scopeMock =
@@ -43,8 +46,8 @@ class DataTest extends \PHPUnit_Framework_TestCase
      * @param $expected
      * @param $result
      *
-     * @dataProvider getLocaleProvider
      */
+    #[DataProvider('getLocaleProvider')]
     public function testGetLocale($path, $expected, $result)
     {
         $map = [
@@ -63,7 +66,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function getLocaleProvider()
+    public static function getLocaleProvider(): array
     {
         return [
             ['general/locale/code', 'ja_JP', 'ja_JP'],
@@ -77,8 +80,8 @@ class DataTest extends \PHPUnit_Framework_TestCase
      * @param $expected
      * @param $result
      *
-     * @dataProvider getElementOrderProvider
      */
+    #[DataProvider('getElementOrderProvider')]
     public function testGetElementOrder($path, $expected, $result)
     {
         $map = [
@@ -97,7 +100,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function getElementOrderProvider()
+    public static function getElementOrderProvider(): array
     {
         return [
             ['localize/sort/',
@@ -119,8 +122,8 @@ class DataTest extends \PHPUnit_Framework_TestCase
      * @param $expected
      * @param $result
      *
-     * @dataProvider getShowCountryProvider
      */
+    #[DataProvider('getShowCountryProvider')]
     public function testGetShowCounry($path, $expected, $result)
     {
         $map = [
@@ -139,7 +142,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function getShowCountryProvider()
+    public static function getShowCountryProvider(): array
     {
         return [
             ['localize/address/hide_country', '1', '1'],
@@ -153,8 +156,8 @@ class DataTest extends \PHPUnit_Framework_TestCase
      * @param $expected
      * @param $result
      *
-     * @dataProvider getRequireKanaProvider
      */
+    #[DataProvider('getRequireKanaProvider')]
     public function testGetRequireKana($path, $expected, $result)
     {
         $map = [
@@ -173,7 +176,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function getRequireKanaProvider()
+    public static function getRequireKanaProvider(): array
     {
         return [
             ['customer/address/require_kana', '1', '1'],
@@ -186,8 +189,8 @@ class DataTest extends \PHPUnit_Framework_TestCase
      * @param $expected
      * @param $result
      *
-     * @dataProvider getUseKanaProvider
      */
+    #[DataProvider('getUseKanaProvider')]
     public function testGetUseKana($path, $expected, $result)
     {
         $map = [
@@ -206,7 +209,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function getUseKanaProvider()
+    public static function getUseKanaProvider(): array
     {
         return [
             ['customer/address/use_kana', '1', '1'],
@@ -220,8 +223,8 @@ class DataTest extends \PHPUnit_Framework_TestCase
      * @param $expected
      * @param $result
      *
-     * @dataProvider getChangeFieldsOrderProvider
      */
+    #[DataProvider('getChangeFieldsOrderProvider')]
     public function testGetChangeFieldsOrder($path, $expected, $result)
     {
         $map = [
@@ -241,7 +244,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function getChangeFieldsOrderProvider()
+    public static function getChangeFieldsOrderProvider(): array
     {
         return [
             ['localize/address/change_fields_order', '1', '1'],

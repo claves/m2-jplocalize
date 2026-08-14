@@ -16,6 +16,8 @@ use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use \Magento\Directory\Model\PriceCurrency;
 use \Veriteworks\Price\Helper\Data;
 use \Veriteworks\Price\Model\Directory\Plugin\PriceRound;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class PriceRoundTest
@@ -26,7 +28,7 @@ use \Veriteworks\Price\Model\Directory\Plugin\PriceRound;
  * @license  Open Software License 3.0
  * @link     https://principle-works.jp/
  */
-class PriceRoundTest extends \PHPUnit_Framework_TestCase
+class PriceRoundTest extends TestCase
 {
     /**
      * Price Round Plugin
@@ -38,14 +40,14 @@ class PriceRoundTest extends \PHPUnit_Framework_TestCase
     /**
      * Price Currency
      *
-     * @var PriceCurrency|\PHPUnit_Framework_MockObject_MockObject
+     * @var PriceCurrency|MockObject
      */
     protected $priceCurrency;
 
     /**
      * Helper
      *
-     * @var Data|\PHPUnit_Framework_MockObject_MockObject
+     * @var Data|MockObject
      */
     protected $helper;
 
@@ -61,13 +63,14 @@ class PriceRoundTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $objectManager = new ObjectManager($this);
 
         $this->helper = $this->getMockBuilder('Veriteworks\Price\Helper\Data')
             ->disableOriginalConstructor()
             ->getMock();
+        $this->helper->method('getIntegerCurrencies')->willReturn(['JPY']);
 
         $this->priceRoundPlugin = $objectManager->getObject(
             'Veriteworks\Price\Model\Directory\Plugin\PriceRound',
@@ -108,7 +111,6 @@ class PriceRoundTest extends \PHPUnit_Framework_TestCase
                 $this->priceCurrency,
                 $this->closure,
                 100.49,
-                [],
                 null,
                 'JPY',
                 2
@@ -134,6 +136,8 @@ class PriceRoundTest extends \PHPUnit_Framework_TestCase
 
         $this->priceCurrency->expects($this->atLeastOnce())
             ->method('getCurrency')->willReturn($currency);
+        $this->priceCurrency->expects($this->once())
+            ->method('convert')->with(100.49, null, 'JPY')->willReturn(100.49);
 
         $this->assertEquals(
             101,
@@ -141,7 +145,6 @@ class PriceRoundTest extends \PHPUnit_Framework_TestCase
                 $this->priceCurrency,
                 $this->closure,
                 100.49,
-                [],
                 null,
                 'JPY',
                 2
@@ -171,6 +174,8 @@ class PriceRoundTest extends \PHPUnit_Framework_TestCase
 
         $priceCurrency->expects($this->atLeastOnce())
             ->method('getCurrency')->willReturn($currency);
+        $priceCurrency->expects($this->once())
+            ->method('convert')->with(100.49, null, 'JPY')->willReturn(100.49);
 
         $this->assertEquals(
             100,
@@ -178,7 +183,6 @@ class PriceRoundTest extends \PHPUnit_Framework_TestCase
                 $priceCurrency,
                 $closure,
                 100.49,
-                [],
                 null,
                 'JPY',
                 2
@@ -211,7 +215,7 @@ class PriceRoundTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             100,
-            $priceRound->aroundRound($priceCurrency, $closure, 100.49, 'USD', 2)
+            $priceRound->aroundRound($priceCurrency, $closure, 100.49)
         );
     }
 
@@ -240,7 +244,7 @@ class PriceRoundTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             101,
-            $priceRound->aroundRound($priceCurrency, $closure, 100.49, 'USD', 2)
+            $priceRound->aroundRound($priceCurrency, $closure, 100.49)
         );
     }
 
@@ -270,7 +274,7 @@ class PriceRoundTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             100,
-            $priceRound->aroundRound($priceCurrency, $closure, 100.49, 'USD', 2)
+            $priceRound->aroundRound($priceCurrency, $closure, 100.49)
         );
     }
 }

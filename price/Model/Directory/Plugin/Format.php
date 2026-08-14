@@ -75,13 +75,14 @@ class Format
         $scope = null,
         $currency = null
     ) {
-        if ($subject->getCurrency()->getCode() == 'JPY') {
+        $targetCurrency = $subject->getCurrency($scope, $currency);
+        if ($targetCurrency->getCode() === 'JPY') {
             $precision = '0';
 
             $method = $this->helper->getRoundMethod($scope);
             $amount = $method($amount);
 
-            return $subject->getCurrency($scope, $currency)
+            return $targetCurrency
                 ->formatPrecision($amount, $precision, [], $includeContainer);
         }
         return $proceed($amount, $includeContainer, $precision, $scope, $currency);

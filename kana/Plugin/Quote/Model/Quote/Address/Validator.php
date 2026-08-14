@@ -2,7 +2,7 @@
 namespace Veriteworks\Kana\Plugin\Quote\Model\Quote\Address;
 
 use \Magento\Quote\Model\QuoteAddressValidator;
-use \Magento\Quote\Model\Quote\Address;
+use Magento\Quote\Api\Data\AddressInterface;
 use \Magento\Customer\Model\AddressFactory;
 use \Veriteworks\Kana\Helper\Data;
 
@@ -33,57 +33,66 @@ class Validator
 
     /**
      * @param QuoteAddressValidator $subject
-     * @param \Magento\Quote\Model\Quote\Address $arguments
-     * @return bool
+     * @param AddressInterface $address
+     * @return null
      */
     public function beforeValidate(
         QuoteAddressValidator $subject,
-        Address $arguments
+        AddressInterface $address
     ) {
         if($this->helper->getRequireKana()) {
-            $this->checkKana($arguments);
+            $this->checkKana($address);
         }
+
+        return null;
     }
 
 
     /**
-     * @param Address $address
+     * @param AddressInterface $address
      * @throws \Magento\Framework\Exception\ValidatorException
      */
-    private function checkKana(Address $address)
+    private function checkKana(AddressInterface $address)
     {
-        $customerAddress = null;
-        $fkana = null;
-        $lkana = null;
+        $fkana = $this->getKanaValue($address, 'firstnamekana');
+        $lkana = $this->getKanaValue($address, 'lastnamekana');
 
-        if(!$address->getQuoteId()) {
-            return;
-        }
-
-        if($addressId = $address->getCustomerAddressId()) {
+        if ((!$fkana || !$lkana) && ($addressId = $address->getCustomerAddressId())) {
             $customerAddress = $this->factory->create()->load($addressId);
 
-            if($fkana = $customerAddress->getFirstnamekana()) {
-                $address->setFirstnamekana($fkana);
+            if (!$fkana && ($fkana = $customerAddress->getFirstnamekana())) {
+                $address->setCustomAttribute('firstnamekana', $fkana);
             }
-            if($lkana = $customerAddress->getLastnamekana()) {
-                $address->setLastnamekana($lkana);
+            if (!$lkana && ($lkana = $customerAddress->getLastnamekana())) {
+                $address->setCustomAttribute('lastnamekana', $lkana);
             }
         }
 
-        if($fkana && !$address->getFirstnamekana())
-        {
+        if (!$fkana) {
             throw new \Magento\Framework\Exception\ValidatorException(
                 __("Firstname kana is required field. Your address doesn't have it.")
             );
         }
 
-        if($lkana && !$address->getLastnamekana())
-        {
+        if (!$lkana) {
             throw new \Magento\Framework\Exception\ValidatorException(
                 __("Lastname kana is required field. Your address doesn't have it.")
             );
         }
+    }
+
+    private function getKanaValue(AddressInterface $address, string $attributeCode): ?string
+    {
+        if (method_exists($address, 'getData')) {
+            $value = $address->getData($attributeCode);
+            if ($value !== null && $value !== '') {
+                return (string) $value;
+            }
+        }
+
+        $attribute = $address->getCustomAttribute($attributeCode);
+
+        return $attribute ? (string) $attribute->getValue() : null;
     }
 
 }

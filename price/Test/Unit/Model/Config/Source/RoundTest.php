@@ -12,6 +12,7 @@
  */
 namespace Veriteworks\Price\Test\Unit\Model\Config\Source;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class RoundTest
@@ -22,7 +23,7 @@ use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
  * @license  Open Software License 3.0
  * @link     https://principle-works.jp/
  */
-class RoundTest extends \PHPUnit_Framework_TestCase
+class RoundTest extends TestCase
 {
     /**
      * Round configuration class
@@ -36,7 +37,7 @@ class RoundTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $objectManager = new ObjectManager($this);
 

@@ -1,0 +1,26 @@
+{
+    "sales_order": {
+        "column": {
+            "customer_lastnamekana": true,
+            "customer_firstnamekana": true
+        }
+    },
+    "quote": {
+        "column": {
+            "customer_lastnamekana": true,
+            "customer_firstnamekana": true
+        }
+    },
+    "sales_order_address": {
+        "column": {
+            "lastnamekana": true,
+            "firstnamekana": true
+        }
+    },
+    "quote_address": {
+        "column": {
+            "lastnamekana": true,
+            "firstnamekana": true
+        }
+    }
+}

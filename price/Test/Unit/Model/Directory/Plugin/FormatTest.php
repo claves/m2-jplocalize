@@ -13,6 +13,8 @@
 namespace Veriteworks\Price\Test\Unit\Model\Directory\Plugin;
 
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
+use PHPUnit\Framework\TestCase;
+use Veriteworks\Price\Helper\Data;
 
 /**
  * Class FormatTest
@@ -23,7 +25,7 @@ use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
  * @license  Open Software License 3.0
  * @link     https://principle-works.jp/
  */
-class FormatTest extends \PHPUnit_Framework_TestCase
+class FormatTest extends TestCase
 {
     /**
      * Price Format Plugin
@@ -51,11 +53,14 @@ class FormatTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $objectManager = new ObjectManager($this);
+        $helper = $this->createMock(Data::class);
+        $helper->method('getRoundMethod')->willReturn('floor');
         $this->formatPlugin = $objectManager->getObject(
-            'Veriteworks\Price\Model\Directory\Plugin\Format'
+            'Veriteworks\Price\Model\Directory\Plugin\Format',
+            ['helper' => $helper]
         );
 
         $this->priceCurrency = $this->getMockBuilder(
@@ -74,13 +79,9 @@ class FormatTest extends \PHPUnit_Framework_TestCase
      */
     public function testJpyAroundFormat()
     {
-        $currency = $this->getMock(
-            'Magento\Directory\Model\Currency',
-            [],
-            [],
-            '',
-            false
-        );
+        $currency = $this->getMockBuilder('Magento\Directory\Model\Currency')
+            ->disableOriginalConstructor()
+            ->getMock();
         $currency->expects($this->atLeastOnce())
             ->method('getCode')->willReturn('JPY');
         $currency->expects($this->atLeastOnce())
@@ -96,6 +97,7 @@ class FormatTest extends \PHPUnit_Framework_TestCase
                 $this->priceCurrency,
                 $this->closure,
                 100.49,
+                true,
                 2,
                 null,
                 null
@@ -125,6 +127,7 @@ class FormatTest extends \PHPUnit_Framework_TestCase
                 $this->priceCurrency,
                 $this->closure,
                 100.49,
+                true,
                 2,
                 null,
                 null

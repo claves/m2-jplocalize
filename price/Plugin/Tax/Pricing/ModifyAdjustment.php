@@ -63,7 +63,7 @@ class ModifyAdjustment
         $currency = $this->priceCurrency->getCurrency();
 
         if ($this->taxHelper->priceIncludesTax()) {
-            if($method != 'round' && $currency == 'JPY') {
+            if($method != 'round' && $currency->getCode() === 'JPY') {
                 $isRound = true;
             }
             $adjustedAmount = $this->catalogHelper->getTaxPrice(
@@ -95,7 +95,7 @@ class ModifyAdjustment
         $isRound = false;
         $currency = $this->priceCurrency->getCurrency();
 
-        if($method != 'round' && $currency->getCode() == 'JPY') {
+        if ($method !== 'round' && $currency->getCode() === 'JPY') {
             $isRound = true;
         }
 

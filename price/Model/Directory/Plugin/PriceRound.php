@@ -76,7 +76,8 @@ class PriceRound
         $currency = null,
         $precision = PriceCurrency::DEFAULT_PRECISION
     ) {
-        if (in_array($subject->getCurrency()->getCode(), $this->helper->getIntegerCurrencies())) {
+        $targetCurrency = $subject->getCurrency($scope, $currency);
+        if (in_array($targetCurrency->getCode(), $this->helper->getIntegerCurrencies(), true)) {
             /**
              * Rounding method
              *
@@ -85,7 +86,7 @@ class PriceRound
             $method = $this->helper->getRoundMethod($scope);
 
             if ($method != 'round') {
-                return $method($amount);
+                return $method($subject->convert($amount, $scope, $currency));
             }
         }
         return $proceed($amount, $scope, $currency, $precision);
@@ -102,12 +103,11 @@ class PriceRound
      *
      * @return mixed
      */
-    public function aroundRound(PriceCurrency  $subject,
+    public function aroundRound(PriceCurrency $subject,
         \Closure $proceed,
-        $amount,
-        $precision = 2
+        $amount
     ) {
-        if (in_array($subject->getCurrency()->getCode(), $this->helper->getIntegerCurrencies())) {
+        if (in_array($subject->getCurrency()->getCode(), $this->helper->getIntegerCurrencies(), true)) {
             /**
              * Rounding method
              *
@@ -118,7 +118,7 @@ class PriceRound
                 return $method($amount);
             }
         }
-        return $proceed($amount, $precision);
+        return $proceed($amount);
     }
 
 }

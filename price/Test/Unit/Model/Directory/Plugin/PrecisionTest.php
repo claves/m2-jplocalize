@@ -13,6 +13,7 @@
 namespace Veriteworks\Price\Test\Unit\Model\Directory\Plugin;
 
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class PrecisionTest
@@ -23,7 +24,7 @@ use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
  * @license  Open Software License 3.0
  * @link     https://principle-works.jp/
  */
-class PrecisionTest extends \PHPUnit_Framework_TestCase
+class PrecisionTest extends TestCase
 {
     /**
      * Precision Plugin
@@ -44,7 +45,7 @@ class PrecisionTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $objectManager = new ObjectManager($this);
         $this->precisionPlugin = $objectManager->getObject(
@@ -63,13 +64,9 @@ class PrecisionTest extends \PHPUnit_Framework_TestCase
      */
     public function testJpyAroundFormatPrecision()
     {
-        $currency = $this->getMock(
-            'Magento\Directory\Model\Currency',
-            [],
-            [],
-            '',
-            false
-        );
+        $currency = $this->getMockBuilder('Magento\Directory\Model\Currency')
+            ->disableOriginalConstructor()
+            ->getMock();
         $currency->expects($this->atLeastOnce())
             ->method('getCode')->willReturn('JPY');
 
@@ -80,6 +77,7 @@ class PrecisionTest extends \PHPUnit_Framework_TestCase
                     $currency,
                     $this->closure,
                     100.49,
+                    2,
                     [],
                     true,
                     false
@@ -107,6 +105,7 @@ class PrecisionTest extends \PHPUnit_Framework_TestCase
                     $currency,
                     $this->closure,
                     100.49,
+                    2,
                     [],
                     true,
                     false

@@ -31,12 +31,15 @@ class Data extends AbstractHelper
      *
      * @return mixed
      */
-    public function getRoundMethod()
+    public function getRoundMethod($scopeCode = null)
     {
-        return $this->scopeConfig->getValue(
+        $method = $this->scopeConfig->getValue(
             'tax/calculation/round',
-            ScopeInterface::SCOPE_STORE
+            ScopeInterface::SCOPE_STORE,
+            $scopeCode
         );
+
+        return in_array($method, ['round', 'ceil', 'floor'], true) ? $method : 'round';
     }
 
     public function getSymbolPosition()
